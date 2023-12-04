@@ -1,0 +1,22 @@
+version: '3.8'
+
+networks:
+  default-network:
+    driver: bridge
+
+volumes:
+  mongo-db-data:
+
+services:
+  mongodb:
+    image: mongo
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: admin
+    ports:
+      - '27017:27017'
+    volumes:
+      - mongo-db-data:/data/db
+    networks:
+      - default-network
