@@ -35,6 +35,8 @@ services:
       SPRING_APPLICATION_JSON: '{
         "spring.profiles.active": "dev"
       }'
+    networks:
+      - default-network
 
   ibx-cloud-eureka:
     container_name: ibx-cloud-eureka
@@ -50,3 +52,5 @@ services:
       SPRING_APPLICATION_JSON: '{
         "spring.profiles.active": "dev"
       }'
+    networks:
+      - default-network
