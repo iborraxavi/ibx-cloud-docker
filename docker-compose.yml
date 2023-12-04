@@ -9,8 +9,9 @@ volumes:
 
 services:
   mongodb:
+    container_name: mongodb
     image: mongo
-    restart: always
+    restart: on-failure
     environment:
       MONGO_INITDB_ROOT_USERNAME: admin
       MONGO_INITDB_ROOT_PASSWORD: admin
@@ -20,3 +21,31 @@ services:
       - mongo-db-data:/data/db
     networks:
       - default-network
+
+  ibx-cloud-config-server:
+    container_name: ibx-cloud-config-server
+    depends_on:
+      - mongodb
+    image: xaviiborra/ibx-cloud-config-server
+    restart: on-failure
+    # env_file: ./.env
+    ports:
+      - 8888:8888
+    environment:
+      SPRING_APPLICATION_JSON: '{
+        "spring.profiles.active": "dev"
+      }'
+
+  ibx-cloud-eureka:
+    container_name: ibx-cloud-eureka
+    depends_on:
+      - mongodb
+    image: xaviiborra/ibx-cloud-eureka
+    restart: on-failure
+    # env_file: ./.env
+    ports:
+      - 8761:8761
+    environment:
+      SPRING_APPLICATION_JSON: '{
+        "spring.profiles.active": "dev"
+      }'
