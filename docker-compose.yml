@@ -24,8 +24,6 @@ services:
 
   ibx-cloud-config-server:
     container_name: ibx-cloud-config-server
-    depends_on:
-      - mongodb
     image: xaviiborra/ibx-cloud-config-server
     restart: on-failure
     # env_file: ./.env
@@ -41,13 +39,47 @@ services:
   ibx-cloud-eureka:
     container_name: ibx-cloud-eureka
     depends_on:
-      - mongodb
       - ibx-cloud-config-server
     image: xaviiborra/ibx-cloud-eureka
     restart: on-failure
     # env_file: ./.env
     ports:
       - 8761:8761
+    environment:
+      SPRING_APPLICATION_JSON: '{
+        "spring.profiles.active": "dev"
+      }'
+    networks:
+      - default-network
+
+  ibx-cloud-gateway:
+    container_name: ibx-cloud-gateway
+    depends_on:
+      - ibx-cloud-config-server
+      - ibx-cloud-eureka
+    image: xaviiborra/ibx-cloud-gateway
+    restart: on-failure
+    # env_file: ./.env
+    ports:
+      - 8080:8080
+    environment:
+      SPRING_APPLICATION_JSON: '{
+        "spring.profiles.active": "dev"
+      }'
+    networks:
+      - default-network
+
+  ibx-cloud-account:
+    container_name: ibx-cloud-account
+    depends_on:
+      - mongodb
+      - ibx-cloud-config-server
+      - ibx-cloud-eureka
+    image: xaviiborra/ibx-cloud-account
+    restart: on-failure
+    # env_file: ./.env
+    ports:
+      - 8080:8080
     environment:
       SPRING_APPLICATION_JSON: '{
         "spring.profiles.active": "dev"
