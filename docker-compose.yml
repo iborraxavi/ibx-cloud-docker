@@ -37,6 +37,8 @@ services:
       - ./keycloak/providers:/opt/jboss/keycloak/providers
       - ./keycloak/standalone/configuration:/opt/jboss/keycloak/standalone/configuration
     entrypoint: ["/opt/keycloak/bin/kc.sh", "start-dev"]
+    networks:
+      - default-network
 
   zookeeper:
     container_name: zookeeper
@@ -46,6 +48,8 @@ services:
       ZOOKEEPER_TICK_TIME: 2000
     ports:
       - 22181:2181
+    networks:
+      - default-network
   
   kafka:
     container_name: kafka
@@ -61,6 +65,8 @@ services:
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    networks:
+      - default-network
 
   kafka-ui:
     container_name: kafka-ui
@@ -73,6 +79,8 @@ services:
       KAFKA_CLUSTERS_0_NAME: local
       KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:9092
       KAFKA_CLUSTERS_0_ZOOKEEPER: zookeeper:2181
+    networks:
+      - default-network
 
   ibx-cloud-config-server:
     container_name: ibx-cloud-config-server
